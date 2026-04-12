@@ -1,0 +1,13 @@
+.treino{
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    height: 100vh;
+}

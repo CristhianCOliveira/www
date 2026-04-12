@@ -1,0 +1,201 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: #d5eba3;
+}
+
+
+.header {
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.main {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    gap: 20px;
+}
+
+
+.content {
+    flex: 3;
+}
+.content {
+    max-width: 800px;
+}
+
+
+.sidebar {
+    flex: 1;
+}
+
+
+.ad {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+
+.actions {
+    margin-bottom: 10px;
+}
+
+.actions a {
+    text-decoration: none;
+    color: #007BFF;
+    margin-right: 10px;
+}
+
+
+.card ul {
+    padding-left: 20px;
+}
+
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.checkbox-item input {
+    display: none;
+}
+
+.custom-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #007BFF;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+}
+
+.checkbox-item input:checked + .custom-checkbox {
+    background: #007BFF;
+}
+
+.checkbox-item input:checked + .custom-checkbox::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+}
+
+
+.checkbox-item input:checked ~ span:last-child {
+    text-decoration: line-through;
+    color: #888;
+}
+.sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+
+.form-card h2 {
+    margin-top: 0;
+}
+
+
+.form-card label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+
+.form-card input,
+.form-card textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+
+.form-card textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+
+.form-card button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.form-card button:hover {
+    background: #0056b3;
+}
+
+.btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+
+    background: #007BFF;
+    color: white;
+    font-size: 28px;
+    text-align: center;
+    line-height: 60px;
+
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+
+    transition: 0.2s;
+    z-index: 999;
+}
+
+.btn:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+}
