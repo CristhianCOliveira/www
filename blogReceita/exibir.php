@@ -12,7 +12,7 @@ if ($result->num_rows > 0) {
 
         echo "<div class='card'>";
 
-        // imagem fake (pode remover se quiser)
+        // Imagem aleatória que vou trocar assim que possível
         echo "<img src='https://picsum.photos/400/200?random=" . $row['id'] . "'>";
 
         echo "<div class='card-content'>";
@@ -24,7 +24,7 @@ if ($result->num_rows > 0) {
         echo "<a href='delete.php?id=" . $row['id'] . "' onclick='return confirm(\"Tem certeza?\")'>Excluir</a>";
         echo "</div>";
 
-        // INGREDIENTES
+        // Imprime os ingredientes na tela
         $ingredientes_result = $conn->query("SELECT nome FROM ingredientes WHERE receita_id = " . $row['id']);
 
         if ($ingredientes_result->num_rows > 0) {

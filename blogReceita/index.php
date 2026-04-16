@@ -27,7 +27,7 @@
         <div class="ad">Anúncio 2</div>
         <div class="ad">Anúncio 3</div>
     </div>
-    <a href="cadastrar_receita.php" class="btn">+ Nova Receita</a>
+    <a href="cadastrar_receita.php" class="btn">+</a>
 
 </div>
 
