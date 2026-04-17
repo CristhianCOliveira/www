@@ -1,10 +1,6 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "receitas_db");
-
-if ($conn -> connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once "config/database.php";
 
 if (!isset($_GET['id'])) {
     die("ID não encontrado.");
@@ -34,7 +30,7 @@ $conn->close();
 <html>
 <head>
     <title>Atualizar Receita</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
@@ -49,7 +45,7 @@ $conn->close();
 
             <h2>Atualizar Receita</h2>
 
-            <form method="POST" action="update.php">
+            <form method="POST" action="update.php" enctype="multipart/form-data">
 
                 <input type="hidden" name="id" value="<?php echo $receita['id']; ?>">
 
@@ -62,6 +58,8 @@ $conn->close();
                 <label>Ingredientes (separados por vírgula)</label>
                 <input type="text" name="ingredientes" 
                 value="<?php echo implode(', ', $ingredientes); ?>">
+
+                <input type="file" name="imagem" accept="image/*">
 
                 <button type="submit">Atualizar</button>
 

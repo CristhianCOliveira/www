@@ -1,10 +1,6 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "receitas_db");
-
-if ($conn -> connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once "config/database.php";
 
 if (!isset($_GET['id'])) {
     die("ID não encontrado.");

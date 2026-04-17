@@ -1,19 +1,69 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "receitas_db");
-
-if ($conn->connect_error) {
-    die("Erro: " . $conn->connect_error);
-}
+require_once "config/database.php";
 
 $id = intval($_POST['id']);
 $titulo = $_POST['titulo'];
 $descricao = $_POST['descricao'];
 $ingredientes = explode(",", $_POST['ingredientes']);
 
+$stmt_img = $conn->prepare("SELECT imagem FROM receitas WHERE id = ?");
+$stmt_img->bind_param("i", $id);
+$stmt_img->execute();
+
+$result = $stmt_img->get_result();
+$receita = $result -> fetch_assoc();
+
+$imagemAtual = $receita['imagem'] ?? null;
+
+$novaImagem = $imagemAtual;
+
+if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === 0) {
+
+    
+    $tiposPermitidos = ['image/jpeg', 'image/png'];
+
+    if (!in_array($_FILES['imagem']['type'], $tiposPermitidos)) {
+        die("Formato inválido. Apenas JPG e PNG.");
+    }
+
+    
+    if ($_FILES['imagem']['size'] > 2 * 1024 * 1024) {
+        die("Imagem muito grande. Máximo 2MB.");
+    }
+
+
+    $pasta = __DIR__ . "/uploads/";
+
+    
+    $extensao = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
+    $nomeArquivo = time() . "." . $extensao;
+
+    $caminho = $pasta . $nomeArquivo;
+
+    if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
+
+
+        if (!empty($imagemAtual)) {
+            $caminhoAntigo = $pasta . $imagemAtual;
+
+            if (file_exists($caminhoAntigo)) {
+                unlink($caminhoAntigo);
+            }
+        }
+        $novaImagem = $nomeArquivo;
+
+    } else {
+        die("Erro ao enviar nova imagem");
+    }
+}
+
+
+
+
 // 1. Atualiza receita
-$stmt = $conn->prepare("UPDATE receitas SET titulo = ?, descricao = ? WHERE id = ?");
-$stmt->bind_param("ssi", $titulo, $descricao, $id);
+$stmt = $conn->prepare("UPDATE receitas SET titulo = ?, descricao = ?, imagem = ? WHERE id = ?");
+$stmt->bind_param("sssi", $titulo, $descricao, $novaImagem, $id);
 
 if ($stmt->execute()) {
 

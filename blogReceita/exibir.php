@@ -1,9 +1,6 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "receitas_db");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once "config/database.php";
 
 $result = $conn->query("SELECT * FROM receitas");
 
@@ -12,8 +9,9 @@ if ($result->num_rows > 0) {
 
         echo "<div class='card'>";
 
-        // Imagem aleatória que vou trocar assim que possível
-        echo "<img src='https://picsum.photos/400/200?random=" . $row['id'] . "'>";
+        if (!empty($row['imagem'])) {
+        echo "<img src='/blogReceita/uploads/" . $row['imagem'] . "' style='width:300px; display:block;'>";
+        }
 
         echo "<div class='card-content'>";
 
