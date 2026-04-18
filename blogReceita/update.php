@@ -2,11 +2,25 @@
 
 require_once "config/database.php";
 
-$id = intval($_POST['id']);
-$titulo = $_POST['titulo'];
-$descricao = $_POST['descricao'];
-$ingredientes = explode(",", $_POST['ingredientes']);
+$id = intval($_POST['id'] ?? 0);
+$titulo = trim($_POST['titulo'] ?? "");
+$descricao = trim($_POST['descricao'] ?? "");
+$ignredientesInput = trim($_POST['ingredientes'] ?? "");
+$ingredientes = explode(",", $ingredientesInput);
 
+if($id <= 0){
+    die("ID de receita não encontrado");
+}
+
+if(empty($titulo) || strlen($titulo) > 100){
+    die("Titulo invalido");
+}
+
+if(empty($descricao)){
+    die("Descrição obrigatória");
+}
+
+//Aqui estamos buscando a imagem que já existe no banco para podermos manipular.
 $stmt_img = $conn->prepare("SELECT imagem FROM receitas WHERE id = ?");
 $stmt_img->bind_param("i", $id);
 $stmt_img->execute();
@@ -59,8 +73,6 @@ if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === 0) {
 }
 
 
-
-
 // 1. Atualiza receita
 $stmt = $conn->prepare("UPDATE receitas SET titulo = ?, descricao = ?, imagem = ? WHERE id = ?");
 $stmt->bind_param("sssi", $titulo, $descricao, $novaImagem, $id);
@@ -82,14 +94,21 @@ if ($stmt->execute()) {
 
         $ingrediente = trim($ingrediente); // remove espaços
 
-        if (!empty($ingrediente)) {
+
+        if (empty($ingrediente) || strlen($ingrediente) > 100) {
+            continue;
+        }
+
+        if (!preg_match("/^[a-zA-ZÀ-ÿ0-9\s]+$/", $ingrediente)) {
+            continue;
+        }
 
            
-            $stmt_ing->bind_param("is", $id, $ingrediente);
+        $stmt_ing->bind_param("is", $id, $ingrediente);
 
-            if (!$stmt_ing->execute()) {
-                echo "Erro ao inserir ingrediente: " . $conn->error;
-            }
+        if (!$stmt_ing->execute()) {
+            echo "Erro ao inserir ingrediente: " . $conn->error;
+        }
         }
     }
     }
@@ -97,9 +116,6 @@ if ($stmt->execute()) {
     header("Location: index.php");
     exit;
 
-} else {
-    echo "Erro: " . $conn->error;
-}
 
 $stmt->close();
 
