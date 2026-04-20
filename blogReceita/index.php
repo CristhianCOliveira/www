@@ -21,6 +21,17 @@
     </div>
 
     <div class="sidebar">
+
+        <div class="form-card search-box">
+        <form method="GET" class="search-form">
+            <input 
+                type="text" name="busca" 
+                placeholder="Buscar receita..." value="<?php echo $_GET['busca'] ?? ''; ?>">
+            <button type="submit">Buscar</button>
+        </form>
+        </div>
+
+
         <h3>Publicidade</h3>
 
         <div class="ad">Anúncio 1</div>

@@ -59,6 +59,7 @@ $conn->close();
                 <input type="text" name="ingredientes" 
                 value="<?php echo implode(', ', $ingredientes); ?>">
 
+                <label>Insira uma imagem: </label>
                 <input type="file" name="imagem" accept="image/*">
 
                 <button type="submit">Atualizar</button>

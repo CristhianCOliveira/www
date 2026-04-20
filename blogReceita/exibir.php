@@ -2,7 +2,32 @@
 
 require_once "config/database.php";
 
+$busca = trim($_GET['busca'] ?? '');
+
+
+if(!empty($busca)){
+
+    //Aqui estamos conectando no banco e buscando as informações que contém a busca realizada. Like faz essa comparação
+    $sql = ("SELECT * FROM receitas WHERE titulo LIKE ? OR descricao LIKE ?");
+
+    $stmt = $conn -> prepare($sql);
+
+    //Os % são importantes par que a pesquisa inclua aquela palavra e não se limite a encontrar somente aquela palvra.
+    //Ex: "Bolo de côco" vai ser encontrado se você pesquisar por somente "bolo"
+    $buscaLike = "%$busca%";
+
+    //Amarrei as duas interrogações com a mesma variável pois ela vai buscar em descrição e em título
+    $stmt->bind_param("ss", $buscaLike, $buscaLike);
+
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+} else {
+
 $result = $conn->query("SELECT * FROM receitas");
+
+}
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -22,8 +47,11 @@ if ($result->num_rows > 0) {
         echo "<a href='delete.php?id=" . $row['id'] . "' onclick='return confirm(\"Tem certeza?\")'>Excluir</a>";
         echo "</div>";
 
-        // Imprime os ingredientes na tela
-        $ingredientes_result = $conn->query("SELECT nome FROM ingredientes WHERE receita_id = " . $row['id']);
+        // Imprime os ingredientes na tela e protege conta SQL injection. 
+        $stmt_ing = $conn->prepare("SELECT nome FROM ingredientes WHERE receita_id = ?");
+        $stmt_ing->bind_param("i", $row['id']);
+        $stmt_ing->execute();
+        $ingredientes_result = $stmt_ing->get_result();
 
         if ($ingredientes_result->num_rows > 0) {
             echo "<h4>Ingredientes:</h4>";
@@ -50,4 +78,5 @@ if ($result->num_rows > 0) {
         echo "</div>"; // card
     }
 }
+
 ?>

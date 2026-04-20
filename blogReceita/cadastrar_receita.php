@@ -31,6 +31,7 @@
                 <label>Ingredientes (separados por vírgula)</label>
                 <input type="text" name="ingredientes" required>
 
+                <label>Insira uma imagem:</label>
                 <input type="file" name="imagem" accept="image/*">
 
                 <button type="submit">Cadastrar</button>

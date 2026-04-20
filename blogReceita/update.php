@@ -102,8 +102,7 @@ if ($stmt->execute()) {
         if (!preg_match("/^[a-zA-ZÀ-ÿ0-9\s]+$/", $ingrediente)) {
             continue;
         }
-
-           
+        
         $stmt_ing->bind_param("is", $id, $ingrediente);
 
         if (!$stmt_ing->execute()) {
