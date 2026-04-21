@@ -1,23 +1,24 @@
 <?php
 
 require_once "config/database.php";
+require_once "includes/functions.php";
 
 $id = intval($_POST['id'] ?? 0);
 $titulo = trim($_POST['titulo'] ?? "");
 $descricao = trim($_POST['descricao'] ?? "");
-$ignredientesInput = trim($_POST['ingredientes'] ?? "");
+$ingredientesInput = trim($_POST['ingredientes'] ?? "");
 $ingredientes = explode(",", $ingredientesInput);
 
 if($id <= 0){
-    die("ID de receita não encontrado");
+    resposta(false, "ID de receita não encontrado");
 }
 
 if(empty($titulo) || strlen($titulo) > 100){
-    die("Titulo invalido");
+    resposta(false, "Titulo invalido");
 }
 
 if(empty($descricao)){
-    die("Descrição obrigatória");
+    resposta(false, "Descrição obrigatória");
 }
 
 //Aqui estamos buscando a imagem que já existe no banco para podermos manipular.
@@ -27,48 +28,17 @@ $stmt_img->execute();
 
 $result = $stmt_img->get_result();
 $receita = $result -> fetch_assoc();
+$stmt_img->close();
 
 $imagemAtual = $receita['imagem'] ?? null;
 
-$novaImagem = $imagemAtual;
+$novaImagem = uploadImagem($_FILES['imagem'] ?? null, __DIR__ . "/uploads") ?? $imagemAtual;
 
-if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === 0) {
+if ($novaImagem !== $imagemAtual && !empty($imagemAtual)) {
+    $caminhoAntigo = __DIR__ . "/uploads/" . $imagemAtual;
 
-    
-    $tiposPermitidos = ['image/jpeg', 'image/png'];
-
-    if (!in_array($_FILES['imagem']['type'], $tiposPermitidos)) {
-        die("Formato inválido. Apenas JPG e PNG.");
-    }
-
-    
-    if ($_FILES['imagem']['size'] > 2 * 1024 * 1024) {
-        die("Imagem muito grande. Máximo 2MB.");
-    }
-
-
-    $pasta = __DIR__ . "/uploads/";
-
-    
-    $extensao = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
-    $nomeArquivo = time() . "." . $extensao;
-
-    $caminho = $pasta . $nomeArquivo;
-
-    if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
-
-
-        if (!empty($imagemAtual)) {
-            $caminhoAntigo = $pasta . $imagemAtual;
-
-            if (file_exists($caminhoAntigo)) {
-                unlink($caminhoAntigo);
-            }
-        }
-        $novaImagem = $nomeArquivo;
-
-    } else {
-        die("Erro ao enviar nova imagem");
+    if (file_exists($caminhoAntigo)) {
+        unlink($caminhoAntigo);
     }
 }
 
@@ -106,7 +76,7 @@ if ($stmt->execute()) {
         $stmt_ing->bind_param("is", $id, $ingrediente);
 
         if (!$stmt_ing->execute()) {
-            echo "Erro ao inserir ingrediente: " . $conn->error;
+            resposta(false, "Erro ao inserir ingrediente");
         }
         }
     }
@@ -125,6 +95,7 @@ if (isset($stmt_del)) {
 if (isset($stmt_ing)) {
     $stmt_ing->close();
 }
+
 
 $conn->close();
 ?>
