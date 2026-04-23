@@ -229,3 +229,15 @@ body {
 .search-form button {
     height: 40px;
 }
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+}

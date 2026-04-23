@@ -58,7 +58,7 @@ if (!$stmt_ing->execute()) {
 }
 
 
-header("Location: index.php");
+header("Location: index.php?sucesso=1");
 exit;
 
 } else {

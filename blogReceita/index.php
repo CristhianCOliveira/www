@@ -16,6 +16,12 @@
 
 <div class="main">
 
+    <?php
+    if (isset($_GET['sucesso'])) {
+    echo "<div class='alert success'>Operação realizada com sucesso!</div>";
+    }
+    ?>
+
     <div class="content">
         <?php include 'exibir.php'; ?>
     </div>

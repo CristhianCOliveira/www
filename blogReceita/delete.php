@@ -66,5 +66,5 @@ if (!empty($imagem)) {
 }
 
 // 7. Redireciona
-header("Location: index.php");
+header("Location: index.php?sucesso=1");
 exit;

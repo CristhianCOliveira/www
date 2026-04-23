@@ -8,7 +8,7 @@ $busca = trim($_GET['busca'] ?? '');
 if(!empty($busca)){
 
     //Aqui estamos conectando no banco e buscando as informações que contém a busca realizada. Like faz essa comparação
-    $sql = ("SELECT * FROM receitas WHERE titulo LIKE ? OR descricao LIKE ?");
+    $sql = ("SELECT * FROM receitas WHERE titulo LIKE ? OR descricao LIKE ? ORDER BY id DESC");
 
     $stmt = $conn -> prepare($sql);
 
@@ -25,7 +25,7 @@ if(!empty($busca)){
 
 } else {
 
-$result = $conn->query("SELECT * FROM receitas");
+$result = $conn->query("SELECT * FROM receitas ORDER BY id DESC");
 
 }
 
@@ -40,11 +40,11 @@ if ($result->num_rows > 0) {
 
         echo "<div class='card-content'>";
 
-        echo "<h2>" . $row['titulo'] . "</h2>";
+        echo "<h2>" . htmlspecialchars($row['titulo']) . "</h2>";
 
         echo "<div class='actions'>";
-        echo "<a href='editar.php?id=" . $row['id'] . "'>Editar</a>";
-        echo "<a href='delete.php?id=" . $row['id'] . "' onclick='return confirm(\"Tem certeza?\")'>Excluir</a>";
+        echo "<a href='editar.php?id=" . htmlspecialchars($row['id']) . "'>Editar</a>";
+        echo "<a href='delete.php?id=" . htmlspecialchars($row['id']) . "' onclick='return confirm(\"Tem certeza que deseja excluir essa receita? Essa ação não pode ser desfeita.\")'>Excluir</a>";
         echo "</div>";
 
         // Imprime os ingredientes na tela e protege conta SQL injection. 
@@ -63,7 +63,7 @@ if ($result->num_rows > 0) {
                     <label class='checkbox-item'>
                         <input type='checkbox'>
                         <span class='custom-checkbox'></span>
-                        <span>" . $ing_row['nome'] . "</span>
+                        <span>" . htmlspecialchars($ing_row['nome']) . "</span>
                     </label>
                 </li>
                 ";
@@ -72,10 +72,14 @@ if ($result->num_rows > 0) {
             echo "</ul>";
         }
 
-        echo "<p>" . $row['descricao'] . "</p>";
+        echo "<p>" . htmlspecialchars($row['descricao']) . "</p>";
 
-        echo "</div>"; // card-content
-        echo "</div>"; // card
+        echo "</div>";
+        echo "</div>";
+    }
+
+    if ($result->num_rows === 0){
+        echo "<p>Nenhuma receita encontrada</p>";
     }
 }
 
